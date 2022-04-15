@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import authApi from "./api/authApi";
 import Routing from "./routing/Routing";
 import { selectAuth, setUserInfo } from "./store/reducers/authSlice";
-import "./styles/index.scss";
+import "./styles/index.less";
 
 function App(): React.ReactElement {
   const { userInfo } = useSelector(selectAuth);

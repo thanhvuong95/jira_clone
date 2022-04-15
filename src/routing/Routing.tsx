@@ -6,7 +6,7 @@ const Board = React.lazy(() => import("../components/Board/Board"));
 const Home = React.lazy(() => import("../components/Home/Home"));
 const NotFound = React.lazy(() => import("../components/NotFound/NotFound"));
 const ProjectTbl = React.lazy(() => import("../components/Project/ProjectTbl"));
-
+const NewProject = React.lazy(() => import("../components/Form/NewProject"));
 const PrivateRoute: FC = () => {
   // if (!userInfo) return <Navigate to="login" />;
 
@@ -16,7 +16,7 @@ const PrivateRoute: FC = () => {
         <Route index element={<Navigate to="/project" />} />
         <Route path="project" element={<Outlet />}>
           <Route index element={<ProjectTbl />} />
-          <Route path="new" element={<div>new</div>} />
+          <Route path="new" element={<NewProject />} />
           <Route path=":id" element={<Board />} />
         </Route>
         <Route path="*" element={<NotFound />} />

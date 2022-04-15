@@ -2,6 +2,7 @@ import { PlusOutlined, SearchOutlined } from "@ant-design/icons";
 import {
   Avatar,
   Button,
+  Drawer,
   Form,
   Modal,
   notification,
@@ -9,16 +10,18 @@ import {
   Tooltip,
 } from "antd";
 import React, { FC, useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import taskApi from "../../api/taskApi";
 import { selectAuth } from "../../store/reducers/authSlice";
+import { getProjectDetail } from "../../store/reducers/projectSlice";
 import NewIssue from "../Form/NewIssue";
 
 const NavbarLeft: FC = () => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const { userInfo } = useSelector(selectAuth);
   const [form] = Form.useForm();
-
+  const dispatch = useDispatch();
+  const [openDrawer, setOpenDrawer] = useState<boolean>(false);
   const toggleModal = () => {
     form.resetFields();
     setIsOpen(!isOpen);
@@ -28,7 +31,7 @@ const NavbarLeft: FC = () => {
     form.validateFields().then((values) => {
       taskApi
         .createTask(values)
-        .then(() => {
+        .then((result) => {
           notification.success({
             message: "Successfully",
             description: `Create issue successfully!`,
@@ -36,6 +39,7 @@ const NavbarLeft: FC = () => {
               borderLeft: "5px solid #33cc66",
             },
           });
+          dispatch(getProjectDetail(result.projectId));
           form.resetFields();
           toggleModal();
         })
@@ -99,7 +103,12 @@ const NavbarLeft: FC = () => {
             </g>
           </svg>
           <Tooltip title="Search" placement="right">
-            <Button type="primary" shape="circle" icon={<SearchOutlined />} />
+            <Button
+              type="primary"
+              shape="circle"
+              icon={<SearchOutlined />}
+              onClick={() => setOpenDrawer(!openDrawer)}
+            />
           </Tooltip>
           <Tooltip title="Create issue" placement="right">
             <Button
@@ -140,6 +149,18 @@ const NavbarLeft: FC = () => {
           form={form}
         />
       </Modal>
+      <Drawer
+        title="Search"
+        placement="left"
+        closable={false}
+        onClose={() => setOpenDrawer(!openDrawer)}
+        visible={openDrawer}
+        key="left"
+      >
+        <p>Some contents...</p>
+        <p>Some contents...</p>
+        <p>Some contents...</p>
+      </Drawer>
     </div>
   );
 };

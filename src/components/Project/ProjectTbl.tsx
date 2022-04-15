@@ -4,7 +4,6 @@ import {
   Avatar,
   Button,
   Empty,
-  notification,
   PaginationProps,
   Popconfirm,
   Popover,
@@ -17,7 +16,7 @@ import { FilterValue, SorterResult } from "antd/lib/table/interface";
 import Title from "antd/lib/typography/Title";
 import React, { FC, useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import projectApi from "../../api/projectApi";
 import userApi from "../../api/userApi";
 import { Member, Project } from "../../models/project";
@@ -28,19 +27,20 @@ import {
   selectAllProject,
 } from "../../store/reducers/projectSlice";
 import { AppDispatch } from "../../store/store";
+import Toast from "../Toast/Toast";
 
 const ProjectTbl: FC = () => {
   const dispatch = useDispatch<AppDispatch>();
   const projects = useSelector(selectAllProject);
   const [visible, setVisible] = useState<number | null>(null);
-  const [open, setOpen] = useState<boolean>(false);
+
   const [userVal, setUserVal] = useState<string>("");
   const [confirmLoading, setConfirmLoading] = useState(false);
   const [sorted, setSorted] = useState<{ sortedInfo: any }>({
     sortedInfo: null,
   });
   const userRef = useRef<any>(null);
-
+  const navigate = useNavigate();
   const [users, setUsers] = useState<User[]>([]);
 
   const { userInfo } = useSelector(selectAuth);
@@ -97,20 +97,14 @@ const ProjectTbl: FC = () => {
 
   const openNotification = (type: string, id: number | string = "") => {
     if (type === "success") {
-      notification.success({
-        message: "Successfully",
-        description: `You have successfully deleted the project ${id}. `,
-        style: {
-          borderLeft: "5px solid #33cc66",
-        },
+      Toast({
+        type: "success",
+        message: `You have successfully deleted the project ${id}.`,
       });
     } else {
-      notification.error({
-        message: "Error",
-        description: `Delete project failed. Please try again. `,
-        style: {
-          borderLeft: "5px solid #f12c36",
-        },
+      Toast({
+        type: "error",
+        message: `Delete project failed. Please try again.`,
       });
     }
   };
@@ -137,17 +131,13 @@ const ProjectTbl: FC = () => {
     projectApi
       .assignUser({ projectId, userId })
       .then(() => {
-        togglePopover();
         setUserVal("");
         dispatch(getAllProject());
       })
       .catch((error) => {
-        notification.error({
-          message: "Error",
-          description: `Add member failed!. `,
-          style: {
-            borderLeft: "5px solid #f12c36",
-          },
+        Toast({
+          type: "error",
+          message: "Add member failed!. ",
         });
       });
   };
@@ -158,10 +148,6 @@ const ProjectTbl: FC = () => {
       value: user.userId.toString(), //Autocomplete required type string for property value
     };
   });
-
-  const togglePopover = () => {
-    setOpen(!open);
-  };
 
   let { sortedInfo } = sorted;
   sortedInfo = sortedInfo || {};
@@ -240,8 +226,6 @@ const ProjectTbl: FC = () => {
                 title="Add user"
                 trigger="click"
                 placement="bottom"
-                visible={open}
-                onVisibleChange={togglePopover}
               >
                 <Button
                   type="primary"
@@ -312,7 +296,9 @@ const ProjectTbl: FC = () => {
         />
       ) : (
         <Empty>
-          <Button type="primary">Create Now</Button>
+          <Button type="primary" onClick={() => navigate("new")}>
+            Create Now
+          </Button>
         </Empty>
       )}
     </>

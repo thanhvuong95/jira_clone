@@ -1,4 +1,4 @@
-import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import userApi from "../../api/userApi";
 import { UserState } from "../../models/user";
 import { RootState } from "../store";
@@ -16,6 +16,9 @@ const userSlice = createSlice({
 
     builder.addCase(getUserByProjectId.fulfilled, (state, action) => {
       state.users = action.payload;
+    });
+    builder.addCase(getUserByProjectId.rejected, (state) => {
+      state.users = [];
     });
   },
 });

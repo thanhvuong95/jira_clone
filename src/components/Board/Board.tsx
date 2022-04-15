@@ -1,9 +1,11 @@
-import { Avatar, Button, Space } from "antd";
+import { Avatar, Button, Divider, Space } from "antd";
 import Search from "antd/lib/input/Search";
 import Title from "antd/lib/typography/Title";
-import { FC, useEffect } from "react";
+import { FC, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
+import { LstTask } from "../../models/project";
+import { selectAuth } from "../../store/reducers/authSlice";
 import {
   getProjectDetail,
   selectProjectDetail,
@@ -14,6 +16,8 @@ import Tasks from "../Tasks/Tasks";
 const Board: FC = () => {
   const dispatch = useDispatch();
   const project = useSelector(selectProjectDetail);
+  const [sort, setSort] = useState<string>("");
+
   const onSearch = (value: string) => console.log(value);
 
   const { id } = useParams();
@@ -25,8 +29,8 @@ const Board: FC = () => {
   return (
     <div>
       <Space direction="vertical" size="middle" style={{ width: "100%" }}>
-        <BreadCrumb />
-        <Title level={3}>Kanban Board</Title>
+        <BreadCrumb subPath="Issue" />
+        <Title level={3}>{project?.projectName}</Title>
         <Space size="middle">
           <Search
             placeholder="Search..."
@@ -42,11 +46,23 @@ const Board: FC = () => {
             ))}
           </Avatar.Group>
           <Space>
-            <Button type="text">Only My Issues</Button>
-            <Button type="text">Ignore Resolved</Button>
+            <Button type="text" onClick={() => setSort("user")}>
+              Only My Issues
+            </Button>
+            <Button type="text" onClick={() => setSort("doing")}>
+              Ignore Resolved
+            </Button>
+            {sort && (
+              <>
+                <Divider type="vertical" />
+                <Button type="text" onClick={() => setSort("")}>
+                  Clear filter
+                </Button>
+              </>
+            )}
           </Space>
         </Space>
-        <Tasks />
+        <Tasks sort={sort} />
       </Space>
     </div>
   );

@@ -4,6 +4,7 @@ import { User } from "./user";
 export interface ProjectState {
   projects: Project[];
   project: ProjectDetail | null;
+  category: ProjectCategories[];
 }
 
 export interface Project {
@@ -75,4 +76,8 @@ export interface Assigness {
 export interface ProjectCategory {
   id: number;
   name: string;
+}
+export interface ProjectCategories {
+  id: number;
+  projectCategoryName: string;
 }

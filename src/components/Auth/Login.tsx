@@ -1,10 +1,11 @@
 import { LockOutlined, UserOutlined } from "@ant-design/icons";
-import { Button, Form, Input, notification } from "antd";
+import { Button, Form, Input } from "antd";
 import Paragraph from "antd/lib/typography/Paragraph";
 import React, { FC, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { login, selectAuth } from "../../store/reducers/authSlice";
+import Toast from "../Toast/Toast";
 const Login: FC = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -15,19 +16,11 @@ const Login: FC = () => {
 
   useEffect(() => {
     if (error) {
-      notification.error({
-        message: "Error",
-        description: error,
-        style: {
-          borderLeft: "5px solid #f12c36",
-        },
-      });
+      Toast({ type: "error", message: error });
     }
   }, [error]);
 
   useEffect(() => {
-    console.log(userInfo);
-
     if (userInfo) {
       localStorage.setItem("userInfo", JSON.stringify(userInfo));
       navigate("/");

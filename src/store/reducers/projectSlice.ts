@@ -1,10 +1,11 @@
-import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import projectApi from "../../api/projectApi";
 import { ProjectState } from "../../models/project";
 import { RootState } from "../store";
 const initialState: ProjectState = {
   projects: [],
   project: null,
+  category: [],
 };
 
 const projectSlice = createSlice({
@@ -12,18 +13,15 @@ const projectSlice = createSlice({
   initialState,
   reducers: {},
   extraReducers: (builder) => {
-    builder.addCase(
-      getAllProject.fulfilled,
-      (state, action: PayloadAction<any>) => {
-        state.projects = [...action.payload];
-      }
-    );
-    builder.addCase(
-      getProjectDetail.fulfilled,
-      (state, action: PayloadAction<any>) => {
-        state.project = action.payload;
-      }
-    );
+    builder.addCase(getAllProject.fulfilled, (state, action) => {
+      state.projects = [...action.payload];
+    });
+    builder.addCase(getProjectDetail.fulfilled, (state, action) => {
+      state.project = action.payload;
+    });
+    builder.addCase(getCategory.fulfilled, (state, action) => {
+      state.category = action.payload;
+    });
   },
 });
 
@@ -39,9 +37,14 @@ export const getProjectDetail = createAsyncThunk(
     return res;
   }
 );
+export const getCategory = createAsyncThunk("project/categories", async () => {
+  const res = await projectApi.getCategory();
+  return res;
+});
 
 const projectReducer = projectSlice.reducer;
 export const selectAllProject = (state: RootState) => state.projects.projects;
 export const selectProjectDetail = (state: RootState) => state.projects.project;
+export const selectCategory = (state: RootState) => state.projects.category;
 
 export default projectReducer;
