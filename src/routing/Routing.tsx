@@ -16,9 +16,9 @@ const PrivateRoute: FC = () => {
         <Route index element={<Navigate to="/project" />} />
         <Route path="project" element={<Outlet />}>
           <Route index element={<ProjectTbl />} />
-          <Route path="new" element={<NewProject />} />
           <Route path=":id" element={<Board />} />
         </Route>
+        <Route path="/settings" element={<NewProject />} />
         <Route path="*" element={<NotFound />} />
       </Route>
     </Routes>

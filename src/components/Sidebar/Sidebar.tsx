@@ -1,11 +1,18 @@
 import { SettingOutlined, SketchOutlined } from "@ant-design/icons";
 import { Menu, Typography } from "antd";
-import React, { FC, useState } from "react";
-import { NavLink } from "react-router-dom";
+import React, { FC, useEffect, useState } from "react";
+import { NavLink, useLocation } from "react-router-dom";
 const { Title, Text } = Typography;
 
 const Sidebar: FC = () => {
+  const { pathname } = useLocation();
+
   const [activeMenu, setActiveMenu] = useState<string>("project");
+
+  useEffect(() => {
+    setActiveMenu(pathname.replace("/", ""));
+  }, [pathname]);
+
   return (
     <div className="sidebar">
       <div className="sidebar-container">
@@ -28,7 +35,7 @@ const Sidebar: FC = () => {
               <NavLink to="project">Project Management</NavLink>
             </Menu.Item>
             <Menu.Item key="settings" icon={<SettingOutlined />}>
-              <NavLink to="project/new">Project Settings</NavLink>
+              <NavLink to="settings">Project Settings</NavLink>
             </Menu.Item>
           </Menu>
         </div>

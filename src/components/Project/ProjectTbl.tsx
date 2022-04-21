@@ -71,7 +71,7 @@ const ProjectTbl: FC = () => {
       .then(() => {
         setVisible(null);
         setConfirmLoading(false);
-        openNotification("success", id);
+        openNotification("success");
         dispatch(getAllProject());
       })
       .catch((e) => {
@@ -95,11 +95,11 @@ const ProjectTbl: FC = () => {
     return lastIndex;
   };
 
-  const openNotification = (type: string, id: number | string = "") => {
+  const openNotification = (type: string) => {
     if (type === "success") {
       Toast({
         type: "success",
-        message: `You have successfully deleted the project ${id}.`,
+        message: `You have successfully deleted the project.`,
       });
     } else {
       Toast({
@@ -296,7 +296,7 @@ const ProjectTbl: FC = () => {
         />
       ) : (
         <Empty>
-          <Button type="primary" onClick={() => navigate("new")}>
+          <Button type="primary" onClick={() => navigate("/settings")}>
             Create Now
           </Button>
         </Empty>
