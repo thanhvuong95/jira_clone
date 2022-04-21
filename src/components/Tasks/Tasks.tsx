@@ -49,7 +49,7 @@ const Tasks: FC<TaskProp> = ({ sort }) => {
   const dispatch = useDispatch();
   const { id } = useParams();
 
-  const [task, setTask] = useState<LstTaskDeTail | null>(null);
+  const [taskId, setTaskId] = useState<number | null>(null);
   const [visible, setVisible] = useState<boolean>(false);
   const [listTask, setListTask] = useState<LstTask[]>([]);
 
@@ -92,7 +92,7 @@ const Tasks: FC<TaskProp> = ({ sort }) => {
       };
 
       taskApi
-        .updateTask(taskUpdate)
+        .updateTaskByStatus(taskUpdate)
         .then(() => {
           dispatch(getProjectDetail(Number(id)));
         })
@@ -104,7 +104,7 @@ const Tasks: FC<TaskProp> = ({ sort }) => {
   };
 
   const onViewDetail = (task: LstTaskDeTail) => {
-    setTask(task);
+    setTaskId(task.taskId);
     setVisible(!visible);
   };
 
@@ -263,7 +263,7 @@ const Tasks: FC<TaskProp> = ({ sort }) => {
         </DragDropContext>
       </Row>
       <TaskDetail
-        task={task}
+        id={taskId}
         visible={visible}
         onVisible={(val: boolean) => setVisible(val)}
       />

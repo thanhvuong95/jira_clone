@@ -21,6 +21,8 @@ const NavbarLeft: FC = () => {
   const { userInfo } = useSelector(selectAuth);
   const [form] = Form.useForm();
   const dispatch = useDispatch();
+  // const [description, setDescription] = useState<string>("");
+
   const [openDrawer, setOpenDrawer] = useState<boolean>(false);
   const toggleModal = () => {
     form.resetFields();
@@ -147,6 +149,8 @@ const NavbarLeft: FC = () => {
         <NewIssue
           // onToggle={toggleModal}
           form={form}
+          // description={description}
+          // onChangeDescription = {}
         />
       </Modal>
       <Drawer
